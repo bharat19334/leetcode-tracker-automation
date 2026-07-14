@@ -45,7 +45,7 @@ Google Sheets → Append or Update Row (prevents duplicates)
 - **Zero-cost** — built entirely on free tiers (n8n Cloud + Google Sheets)
 
 ## 📊 Google Sheets Output
-![Sheet Output](screenshots/sheet-output.png)
+![Sheet Output](screenshots/sheet.png)
 
 ## 🚀 Setup
 
