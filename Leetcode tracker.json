@@ -1,0 +1,315 @@
+{
+  "name": "Leetcode tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://leetcode.com/graphql",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"query\": \"query recentAcSubmissions($username: String!, $limit: Int!) { recentAcSubmissionList(username: $username, limit: $limit) { title titleSlug timestamp } }\",\n  \"variables\": { \"username\": \"bharatgoswami19\", \"limit\": 20 }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        -176
+      ],
+      "id": "ab55c020-6276-4120-acaf-c49a71cf5c17",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data.recentAcSubmissionList",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        416,
+        16
+      ],
+      "id": "9442a5f7-7954-4997-b6d5-58dc9e97c298",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://leetcode.com/graphql",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": \"query questionData($titleSlug: String!) { question(titleSlug: $titleSlug) { title difficulty topicTags { name } } }\",\n  \"variables\": { \"titleSlug\": \"{{ $json.titleSlug }}\" }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        608,
+        -160
+      ],
+      "id": "196b731a-86ce-4660-bd0a-818ff7918552",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const patternMap = {\n  \"Array\": \"Arrays\",\n  \"String\": \"Strings\",\n  \"Hash Table\": \"Hashing\",\n  \"Two Pointers\": \"Two Pointers\",\n  \"Sliding Window\": \"Sliding Window\",\n  \"Binary Search\": \"Binary Search\",\n  \"Dynamic Programming\": \"DP\",\n  \"Backtracking\": \"Backtracking\",\n  \"Greedy\": \"Greedy\",\n  \"Sorting\": \"Sorting\",\n  \"Matrix\": \"Matrix\",\n  \"Stack\": \"Stack\",\n  \"Queue\": \"Queue\",\n  \"Linked List\": \"Linked List\",\n  \"Tree\": \"Trees\",\n  \"Binary Tree\": \"Trees\",\n  \"Graph\": \"Graph\",\n  \"Heap (Priority Queue)\": \"Heap\",\n  \"Bit Manipulation\": \"Bit Manipulation\",\n  \"Recursion\": \"Recursion\"\n};\n\nconst item = $json;\nconst question = item.data ? item.data.question : null;\nconst titleSlug = $('Split Out').item.json.titleSlug || \"\";\n\nlet pattern = \"Other\";\nif (question && question.topicTags && question.topicTags.length > 0) {\n  for (const tag of question.topicTags) {\n    if (patternMap[tag.name]) {\n      pattern = patternMap[tag.name];\n      break;\n    }\n  }\n}\n\nconst solvedDate = new Date();\nconst day1 = new Date(solvedDate); day1.setDate(day1.getDate() + 1);\nconst day7 = new Date(solvedDate); day7.setDate(day7.getDate() + 7);\nconst day21 = new Date(solvedDate); day21.setDate(day21.getDate() + 21);\n\nfunction formatDate(d) {\n  return d.toISOString().split('T')[0];\n}\n\nreturn {\n  Title: question ? question.title : \"Unknown\",\n  TitleSlug: titleSlug,\n  Pattern: pattern,\n  Difficulty: question ? question.difficulty : \"Unknown\",\n  DateSolved: formatDate(solvedDate),\n  Day1: formatDate(day1),\n  Day1_Done: \"FALSE\",\n  Day7: formatDate(day7),\n  Day7_Done: \"FALSE\",\n  Day21: formatDate(day21),\n  Day21_Done: \"FALSE\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        32
+      ],
+      "id": "c1e2ab37-6141-45df-9f78-29518ed785bc",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1lqll6PEUYq6ZGtYVkXaOfmWxa_bRa-ntd_VvCAuDgzU",
+          "mode": "list",
+          "cachedResultName": "LeetCode Tracke",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lqll6PEUYq6ZGtYVkXaOfmWxa_bRa-ntd_VvCAuDgzU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lqll6PEUYq6ZGtYVkXaOfmWxa_bRa-ntd_VvCAuDgzU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "TitleSlug"
+          ],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TitleSlug",
+              "displayName": "TitleSlug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Difficulty",
+              "displayName": "Difficulty",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "DateSolved",
+              "displayName": "DateSolved",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Day1",
+              "displayName": "Day1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Day1_Done",
+              "displayName": "Day1_Done",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Day7",
+              "displayName": "Day7",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Day7_Done",
+              "displayName": "Day7_Done",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Day21",
+              "displayName": "Day21",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Day21_Done",
+              "displayName": "Day21_Done",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pattern",
+              "displayName": "Pattern",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        992,
+        -176
+      ],
+      "id": "f6683722-a931-4ec5-9ae9-0d1a49f3f170",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "FNNLE8ekE9eOdvIs",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 11
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -16,
+        16
+      ],
+      "id": "060a7e1a-f3a1-4162-a0b9-3853e649445f",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "2e5a6719-3848-4529-9b57-f182b8b0f2bc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e2307a1104bf173f83f1d2e9f2ffeca71788dfd6daed2ff7a3b611708f319adf"
+  },
+  "nodeGroups": [],
+  "id": "12zvunsIXH57703i",
+  "tags": []
+}
