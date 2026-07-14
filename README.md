@@ -13,6 +13,9 @@ Every day, the workflow:
 4. Calculates spaced-repetition revision dates (Day 1 / Day 7 / Day 21)
 5. Logs everything into Google Sheets — automatically, with no duplicates
 
+### n8n Workflow Pipeline
+![Workflow](screenshots/workflow.png)
+
 ## ⚙️ How It Works
 Schedule Trigger (Daily)
     ↓
@@ -41,12 +44,8 @@ Google Sheets → Append or Update Row (prevents duplicates)
 - **Spaced repetition** — auto-calculates Day 1 / Day 7 / Day 21 revision reminders
 - **Zero-cost** — built entirely on free tiers (n8n Cloud + Google Sheets)
 
-## 📊 Sample Output
-
-| Title | Pattern | Difficulty | DateSolved | Day1 | Day7 | Day21 |
-|---|---|---|---|---|---|---|
-| Valid Anagram | Hashing | Easy | 2026-07-14 | 2026-07-15 | 2026-07-21 | 2026-08-04 |
-| Rotate Image | Matrix | Medium | 2026-07-13 | 2026-07-14 | 2026-07-20 | 2026-08-03 |
+## 📊 Google Sheets Output
+![Sheet Output](screenshots/sheet-output.png)
 
 ## 🚀 Setup
 
